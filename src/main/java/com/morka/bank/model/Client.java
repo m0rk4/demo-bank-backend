@@ -8,6 +8,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
@@ -46,6 +48,11 @@ public class Client {
     private boolean isRetired;
 
     private Integer monthlyIncome;
+
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(nullable = false, unique = true)
+    @MapsId
+    private Passport passport;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "city_actual_id", nullable = false)
