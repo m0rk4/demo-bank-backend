@@ -5,8 +5,14 @@ spring:
     open-in-view: false
     show-sql: true
     properties:
+      jakarta:
+        persistence:
+          sharedCache:
+            mode: UNSPECIFIED
       hibernate:
         format_sql: true
+    hibernate:
+      ddl-auto: validate
   datasource:
     username: postgres
     password: postgres
