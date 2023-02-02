@@ -8,9 +8,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class ClientDto {
-
-    private Long id;
+public class UpdateClientDto {
 
     private String firstname;
 
@@ -34,13 +32,13 @@ public class ClientDto {
 
     private Integer monthlyIncome;
 
-    private PassportDto passport;
+    private UpdatePassportDto passport;
 
-    private CityDto cityActual;
+    private Long cityActualId;
 
-    private MaritalStatusDto maritalStatus;
+    private Long maritalStatusId;
 
-    private CitizenshipDto citizenship;
+    private Long citizenshipId;
 
-    private DisabilityDto disability;
+    private Long disabilityId;
 }

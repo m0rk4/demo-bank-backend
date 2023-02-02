@@ -1,1 +1,70 @@
-GET http://localhost:8080/clients?page=1&size=3&sort=firstname,DESC
+### Get page
+GET http://localhost:8080/clients?page=0&size=3&sort=firstname,DESC
+
+### Get one
+GET http://localhost:8080/clients/13
+
+### Delete
+DELETE http://localhost:8080/clients/444
+
+### Add client
+POST http://localhost:8080/clients
+Content-Type: application/json
+
+{
+  "firstname": "Андрей323",
+  "lastname": "Dub",
+  "patronymic": "Puk",
+  "dateOfBirth": "2022-09-09",
+  "sex": "F",
+  "address": "<budka",
+  "phoneNumberHome": "314141",
+  "phoneNumber": "+375",
+  "email": "mark_putyato@mail.ru",
+  "isRetired": true,
+  "monthlyIncome": 2323,
+  "passport": {
+    "passportId": "3124142",
+    "passportSeries": "KK",
+    "passportNumber": "231413234",
+    "passportIssuer": "Oshm",
+    "passportIssuedDate": "2022-09-09",
+    "passportAddress": "minks",
+    "placeOfBirth": "bubu"
+  },
+  "cityActualId": 1,
+  "maritalStatusId": 1,
+  "citizenshipId": 1,
+  "disabilityId": 1
+}
+
+### update
+PUT http://localhost:8080/clients/8
+Content-Type: application/json
+
+{
+  "firstname": "Андрей32423",
+  "lastname": "Dubid",
+  "patronymic": "Pukuu",
+  "dateOfBirth": "2022-09-09",
+  "sex": "M",
+  "address": "<budka",
+  "phoneNumberHome": "314141",
+  "phoneNumber": "+375",
+  "email": null,
+  "isRetired": true,
+  "monthlyIncome": 2323,
+  "passport": {
+    "passportId": "3124142",
+    "passportSeries": "KK",
+    "passportNumber": "231413234",
+    "passportIssuer": "Oshmnnn",
+    "passportIssuedDate": "2022-09-09",
+    "passportAddress": "minks",
+    "placeOfBirth": "bubu"
+  },
+  "cityActualId": 1,
+  "maritalStatusId": 1,
+  "citizenshipId": 1,
+  "disabilityId": 1
+}
