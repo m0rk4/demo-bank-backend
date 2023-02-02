@@ -20,4 +20,8 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     @EntityGraph(attributePaths = {"cityActual", "disability", "maritalStatus", "citizenship", "passport"})
     @NonNull
     Optional<Client> findById(@NonNull Long aLong);
+
+    boolean existsByEmail(String email);
+
+    boolean existsByEmailAndIdIsNot(String email, Long id);
 }

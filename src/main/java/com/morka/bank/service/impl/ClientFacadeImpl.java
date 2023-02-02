@@ -2,15 +2,13 @@ package com.morka.bank.service.impl;
 
 import com.morka.bank.dto.ClientDto;
 import com.morka.bank.dto.UpdateClientDto;
+import com.morka.bank.dto.UpdatePassportDto;
+import com.morka.bank.exception.EmailExistsException;
+import com.morka.bank.exception.PassportExistsException;
 import com.morka.bank.mapper.Mapper;
 import com.morka.bank.model.Client;
 import com.morka.bank.model.Passport;
-import com.morka.bank.repository.CitizenshipRepository;
-import com.morka.bank.repository.CityRepository;
-import com.morka.bank.repository.ClientRepository;
-import com.morka.bank.repository.DisabilityRepository;
-import com.morka.bank.repository.MaritalStatusRepository;
-import com.morka.bank.repository.PassportRepository;
+import com.morka.bank.repository.*;
 import com.morka.bank.service.ClientFacade;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -55,10 +53,9 @@ public class ClientFacadeImpl implements ClientFacade {
     @Transactional
     @Override
     public ClientDto updateClient(Long id, UpdateClientDto clientDto) {
-        var exists = repository.existsById(id);
-        if (!exists) {
-            throw new EntityNotFoundException("No user found.");
-        }
+        validateClient(id);
+        validateEmail(clientDto.getEmail(), id);
+        validatePassport(clientDto.getPassport(), id);
         var passport = mapper.map(clientDto.getPassport(), Passport.class);
         passport.setId(id);
         var savedPassport = passportRepository.save(passport);
@@ -70,6 +67,8 @@ public class ClientFacadeImpl implements ClientFacade {
     @Transactional
     @Override
     public ClientDto addClient(UpdateClientDto updateClientDto) {
+        validateEmail(updateClientDto.getEmail());
+        validatePassport(updateClientDto.getPassport());
         var passport = mapper.map(updateClientDto.getPassport(), Passport.class);
         var savedPassport = passportRepository.save(passport);
         var client = prepareClient(updateClientDto, savedPassport);
@@ -91,5 +90,37 @@ public class ClientFacadeImpl implements ClientFacade {
     public void delete(Long id) {
         repository.delete(repository.getReferenceById(id));
         passportRepository.delete(passportRepository.getReferenceById(id));
+    }
+
+    private void validateClient(Long id) {
+        if (!repository.existsById(id)) {
+            throw new EntityNotFoundException("No user found by id.");
+        }
+    }
+
+    private void validatePassport(UpdatePassportDto dto, Long clientId) {
+        boolean exists = passportRepository.existsByPassportIdAndIdIsNot(dto.getPassportId(), clientId)
+                || passportRepository.existsByPassportNumberAndIdIsNot(dto.getPassportNumber(), clientId);
+        if (exists) {
+            throw new PassportExistsException("Passport with such ID or number already exists.");
+        }
+    }
+
+    private void validateEmail(String email, Long clientId) {
+        if (repository.existsByEmailAndIdIsNot(email, clientId)) {
+            throw new EmailExistsException("Client with such Email already exists.");
+        }
+    }
+
+    private void validateEmail(String email) {
+        if (repository.existsByEmail(email)) {
+            throw new EmailExistsException("Client with such Email already exists.");
+        }
+    }
+
+    private void validatePassport(UpdatePassportDto dto) {
+        if (passportRepository.existsByPassportIdOrPassportNumber(dto.getPassportId(), dto.getPassportNumber())) {
+            throw new PassportExistsException("Passport with such ID or number already exists.");
+        }
     }
 }

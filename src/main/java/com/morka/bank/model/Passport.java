@@ -24,17 +24,22 @@ public class Passport {
     @Column(nullable = false, unique = true)
     private String passportId;
 
+    @Column(nullable = false)
     private String passportSeries;
 
     @Column(nullable = false, unique = true)
     private String passportNumber;
 
+    @Column(nullable = false)
     private String passportIssuer;
 
+    @Column(nullable = false)
     private LocalDate passportIssuedDate;
 
+    @Column(nullable = false)
     private String passportAddress;
 
+    @Column(nullable = false)
     private String placeOfBirth;
 
     @Override

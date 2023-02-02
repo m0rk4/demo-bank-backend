@@ -12,21 +12,21 @@ POST http://localhost:8080/clients
 Content-Type: application/json
 
 {
-  "firstname": "Андрей323",
+  "firstname": "Андрей",
   "lastname": "Dub",
   "patronymic": "Puk",
   "dateOfBirth": "2022-09-09",
   "sex": "F",
   "address": "<budka",
-  "phoneNumberHome": "314141",
-  "phoneNumber": "+375",
-  "email": "mark_putyato@mail.ru",
+  "phoneNumberHome": "159300140",
+  "phoneNumber": "293760895",
+  "email": "mark23_putyato@mail.ru",
   "isRetired": true,
-  "monthlyIncome": 2323,
+  "monthlyIncome": 0,
   "passport": {
-    "passportId": "3124142",
-    "passportSeries": "KK",
-    "passportNumber": "231413234",
+    "passportId": "5260802K000PB8",
+    "passportSeries": "KH",
+    "passportNumber": "2626914",
     "passportIssuer": "Oshm",
     "passportIssuedDate": "2022-09-09",
     "passportAddress": "minks",
@@ -39,26 +39,26 @@ Content-Type: application/json
 }
 
 ### update
-PUT http://localhost:8080/clients/8
+PUT http://localhost:8080/clients/26
 Content-Type: application/json
 
 {
-  "firstname": "Андрей32423",
-  "lastname": "Dubid",
-  "patronymic": "Pukuu",
+  "firstname": "Андрей",
+  "lastname": "Dub",
+  "patronymic": "Puk",
   "dateOfBirth": "2022-09-09",
-  "sex": "M",
+  "sex": "F",
   "address": "<budka",
   "phoneNumberHome": "314141",
-  "phoneNumber": "+375",
-  "email": null,
+  "phoneNumber": "293760895",
+  "email": "mark23_putyato@mail.ru",
   "isRetired": true,
-  "monthlyIncome": 2323,
+  "monthlyIncome": 0,
   "passport": {
-    "passportId": "3124142",
-    "passportSeries": "KK",
-    "passportNumber": "231413234",
-    "passportIssuer": "Oshmnnn",
+    "passportId": "5260802K000PB9",
+    "passportSeries": "KH",
+    "passportNumber": "2626919",
+    "passportIssuer": "Oshm",
     "passportIssuedDate": "2022-09-09",
     "passportAddress": "minks",
     "placeOfBirth": "bubu"

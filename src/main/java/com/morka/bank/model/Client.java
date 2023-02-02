@@ -28,26 +28,35 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String firstname;
 
+    @Column(nullable = false)
     private String lastname;
 
+    @Column(nullable = false)
     private String patronymic;
 
+    @Column(nullable = false)
     private LocalDate dateOfBirth;
 
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Sex sex;
 
+    @Column(nullable = false)
     private String address;
 
+    @Column(nullable = false)
     private String phoneNumberHome;
 
+    @Column(nullable = false)
     private String phoneNumber;
 
     @Column(unique = true)
     private String email;
 
+    @Column(nullable = false)
     private boolean isRetired;
 
     private Integer monthlyIncome;
