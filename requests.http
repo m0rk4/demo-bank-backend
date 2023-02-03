@@ -15,7 +15,7 @@ Content-Type: application/json
   "firstname": "Андрей",
   "lastname": "Dub",
   "patronymic": "Puk",
-  "dateOfBirth": "2022-09-09",
+  "dateOfBirth": "2023-09-09",
   "sex": "F",
   "address": "<budka",
   "phoneNumberHome": "159300140",

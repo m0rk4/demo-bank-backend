@@ -4,7 +4,8 @@ import com.morka.bank.dto.ClientDto;
 import com.morka.bank.dto.UpdateClientDto;
 import com.morka.bank.dto.UpdatePassportDto;
 import com.morka.bank.exception.EmailExistsException;
-import com.morka.bank.exception.PassportExistsException;
+import com.morka.bank.exception.PassportIdExistsException;
+import com.morka.bank.exception.PassportNumberExistsException;
 import com.morka.bank.mapper.Mapper;
 import com.morka.bank.model.Client;
 import com.morka.bank.model.Passport;
@@ -105,10 +106,11 @@ public class ClientFacadeImpl implements ClientFacade {
     }
 
     private void validatePassport(UpdatePassportDto dto, Long clientId) {
-        boolean exists = passportRepository.existsByPassportIdAndIdIsNot(dto.getPassportId(), clientId)
-                || passportRepository.existsByPassportNumberAndIdIsNot(dto.getPassportNumber(), clientId);
-        if (exists) {
-            throw new PassportExistsException("Passport with such ID or number already exists.");
+        if (passportRepository.existsByPassportIdAndIdIsNot(dto.getPassportId(), clientId)) {
+            throw new PassportIdExistsException("Passport with such ID already exists.");
+        }
+        if (passportRepository.existsByPassportNumberAndIdIsNot(dto.getPassportNumber(), clientId)) {
+            throw new PassportNumberExistsException("Passport with such number already exists.");
         }
     }
 
@@ -125,8 +127,11 @@ public class ClientFacadeImpl implements ClientFacade {
     }
 
     private void validatePassport(UpdatePassportDto dto) {
-        if (passportRepository.existsByPassportIdOrPassportNumber(dto.getPassportId(), dto.getPassportNumber())) {
-            throw new PassportExistsException("Passport with such ID or number already exists.");
+        if (passportRepository.existsByPassportId(dto.getPassportId())) {
+            throw new PassportIdExistsException("Passport with such ID already exists.");
+        }
+        if (passportRepository.existsByPassportNumber(dto.getPassportNumber())) {
+            throw new PassportNumberExistsException("Passport with such Number already exists.");
         }
     }
 }

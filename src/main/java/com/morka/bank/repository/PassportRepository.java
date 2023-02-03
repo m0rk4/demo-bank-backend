@@ -7,7 +7,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PassportRepository extends JpaRepository<Passport, Long> {
 
-    boolean existsByPassportIdOrPassportNumber(String passportId, String passportNumber);
+    boolean existsByPassportId(String passportId);
+
+    boolean existsByPassportNumber(String passportNumber);
 
     boolean existsByPassportIdAndIdIsNot(String passportId, Long clientId);
 
