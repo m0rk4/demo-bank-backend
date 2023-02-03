@@ -5,5 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <include file="migrations/db.changelog-1-initialization.xml" relativeToChangelogFile="true"/>
+    <changeSet id="2023-02-03" author="MarkPutyato">
+        <sqlFile path="./db/changelog/sql/1-structure.sql"/>
+    </changeSet>
 </databaseChangeLog>
