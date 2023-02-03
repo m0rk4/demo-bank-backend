@@ -49,7 +49,6 @@ public class UpdateClientDto {
     @NotBlank
     private String phoneNumber;
 
-    @NotBlank
     @Email
     private String email;
 

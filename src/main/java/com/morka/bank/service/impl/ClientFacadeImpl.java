@@ -8,10 +8,16 @@ import com.morka.bank.exception.PassportExistsException;
 import com.morka.bank.mapper.Mapper;
 import com.morka.bank.model.Client;
 import com.morka.bank.model.Passport;
-import com.morka.bank.repository.*;
+import com.morka.bank.repository.CitizenshipRepository;
+import com.morka.bank.repository.CityRepository;
+import com.morka.bank.repository.ClientRepository;
+import com.morka.bank.repository.DisabilityRepository;
+import com.morka.bank.repository.MaritalStatusRepository;
+import com.morka.bank.repository.PassportRepository;
 import com.morka.bank.service.ClientFacade;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -107,13 +113,13 @@ public class ClientFacadeImpl implements ClientFacade {
     }
 
     private void validateEmail(String email, Long clientId) {
-        if (repository.existsByEmailAndIdIsNot(email, clientId)) {
+        if (StringUtils.isNotBlank(email) && repository.existsByEmailAndIdIsNot(email, clientId)) {
             throw new EmailExistsException("Client with such Email already exists.");
         }
     }
 
     private void validateEmail(String email) {
-        if (repository.existsByEmail(email)) {
+        if (StringUtils.isNotBlank(email) && repository.existsByEmail(email)) {
             throw new EmailExistsException("Client with such Email already exists.");
         }
     }
