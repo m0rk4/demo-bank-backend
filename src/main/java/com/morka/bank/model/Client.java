@@ -82,6 +82,10 @@ public class Client {
     @JoinColumn(name = "disability_id", nullable = false)
     private Disability disability;
 
+    public String getFullName() {
+        return lastname + " " + firstname + " " + patronymic;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

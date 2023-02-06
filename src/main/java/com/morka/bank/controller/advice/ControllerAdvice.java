@@ -1,6 +1,8 @@
-package com.morka.bank.controller;
+package com.morka.bank.controller.advice;
 
+import com.morka.bank.exception.DepositAgreementNumberExists;
 import com.morka.bank.exception.EmailExistsException;
+import com.morka.bank.exception.InvalidDepositBalanceException;
 import com.morka.bank.exception.PassportIdExistsException;
 import com.morka.bank.exception.PassportNumberExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -44,6 +46,22 @@ public class ControllerAdvice {
                 .body(new ErrorResponse(exception.getMessage(), ErrorCode.PASSPORT_NUMBER_EXISTS.getCodeName()));
     }
 
+    @ExceptionHandler(InvalidDepositBalanceException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResponse> handleInvalidDepositBalance(InvalidDepositBalanceException exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(exception.getMessage(), ErrorCode.INVALID_DEPOSIT_BALANCE.getCodeName()));
+    }
+
+    @ExceptionHandler(DepositAgreementNumberExists.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResponse> handleDepositAgreementNumberExists(DepositAgreementNumberExists exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(exception.getMessage(), ErrorCode.DEPOSIT_AGREEMENT_NUMBER_EXISTS.getCodeName()));
+    }
+
     private record ErrorResponse(String message, String code) {
     }
 
@@ -51,7 +69,9 @@ public class ControllerAdvice {
         NOT_FOUND("not_found"),
         EMAIL_EXISTS("email_exists"),
         PASSPORT_ID_EXISTS("passport_id_exists"),
-        PASSPORT_NUMBER_EXISTS("passport_number_exists");
+        PASSPORT_NUMBER_EXISTS("passport_number_exists"),
+        INVALID_DEPOSIT_BALANCE("invalid_deposit_balance"),
+        DEPOSIT_AGREEMENT_NUMBER_EXISTS("deposit_agreement_number_exists");
 
         private final String codeName;
 

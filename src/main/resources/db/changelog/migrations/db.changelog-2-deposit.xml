@@ -177,4 +177,51 @@
             ;
         </sql>
     </changeSet>
+
+    <changeSet id="2023-02-06-19-50-00" author="MarkPutyato">
+        <sql dbms="postgresql">
+            ALTER TABLE account ALTER COLUMN debit TYPE bigint;
+            ALTER TABLE account ALTER COLUMN credit TYPE bigint;
+            ALTER TABLE deposit_agreement ALTER COLUMN deposit_balance TYPE bigint;
+        </sql>
+    </changeSet>
+
+    <changeSet id="2023-02-06-20-50-00" author="MarkPutyato">
+        <dropUniqueConstraint tableName="currency_type" constraintName="unq_currency_type_name"/>
+
+        <insert tableName="currency_type">
+            <column name="name" value="BYN"/>
+        </insert>
+        <insert tableName="currency_type">
+            <column name="name" value="USD"/>
+        </insert>
+
+        <insert tableName="account">
+            <column name="name" value="Касса банка"/>
+            <column name="currency_type_id" valueComputed="(SELECT id FROM currency_type WHERE name = 'BYN' LIMIT 1)"/>
+            <column name="activity" value="ACTIVE"/>
+            <column name="code" value="BANK_CASH"/>
+            <column name="credit" value="0"/>
+            <column name="debit" value="0"/>
+            <column name="number" value="1010000000001"/>
+        </insert>
+
+        <insert tableName="account">
+            <column name="name" value="Фонд развития банка"/>
+            <column name="currency_type_id" valueComputed="(SELECT id FROM currency_type WHERE name = 'BYN' LIMIT 1)"/>
+            <column name="activity" value="PASSIVE"/>
+            <column name="code" value="BANK_DEVELOPMENT_FUND"/>
+            <column name="credit" value="10000000000000"/>
+            <column name="debit" value="0"/>
+            <column name="number" value="7327000000001"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="2023-02-06-21-50-00" author="MarkPutyato">
+        <addUniqueConstraint tableName="currency_type" columnNames="name"/>
+    </changeSet>
+
+    <changeSet id="2023-02-06-22-50-00" author="MarkPutyato">
+        <addUniqueConstraint tableName="deposit_agreement" columnNames="number"/>
+    </changeSet>
 </databaseChangeLog>

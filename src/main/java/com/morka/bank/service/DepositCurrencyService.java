@@ -1,10 +1,12 @@
 package com.morka.bank.service;
 
-import com.morka.bank.dto.DepositCurrencyDto;
+import com.morka.bank.model.DepositCurrency;
 
 import java.util.List;
 
 public interface DepositCurrencyService {
 
-    List<DepositCurrencyDto> findByDepositTypeId(Long depositTypeId);
+    List<DepositCurrency> findByDepositTypeId(Long depositTypeId);
+
+    DepositCurrency findById(Long id);
 }

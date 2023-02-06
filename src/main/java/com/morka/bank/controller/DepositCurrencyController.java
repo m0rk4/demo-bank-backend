@@ -1,7 +1,7 @@
 package com.morka.bank.controller;
 
 import com.morka.bank.dto.DepositCurrencyDto;
-import com.morka.bank.service.DepositCurrencyService;
+import com.morka.bank.facade.DepositCurrencyFrontFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,10 +15,10 @@ import java.util.List;
 @RequestMapping("/deposit-currencies")
 public class DepositCurrencyController {
 
-    private final DepositCurrencyService service;
+    private final DepositCurrencyFrontFacade facade;
 
     @GetMapping("/by-deposit-type")
     public List<DepositCurrencyDto> getDepositType(@RequestParam Long depositTypeId) {
-        return service.findByDepositTypeId(depositTypeId);
+        return facade.findByDepositTypeId(depositTypeId);
     }
 }

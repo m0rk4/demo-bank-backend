@@ -3,7 +3,7 @@ package com.morka.bank.controller;
 
 import com.morka.bank.dto.ClientDto;
 import com.morka.bank.dto.UpdateClientDto;
-import com.morka.bank.service.ClientFacade;
+import com.morka.bank.facade.ClientFrontFacade;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,30 +15,25 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/clients")
 public class ClientController {
 
-    private final ClientFacade clientFacade;
+    private final ClientFrontFacade clientFrontFacade;
 
     @GetMapping
     public Page<ClientDto> getClients(Pageable pageable) {
-        return clientFacade.getClients(pageable);
-    }
-
-    @GetMapping("/{id}")
-    public ClientDto getClient(@PathVariable Long id) {
-        return clientFacade.getClient(id);
+        return clientFrontFacade.getClients(pageable);
     }
 
     @PostMapping
     public ClientDto addClient(@Valid @RequestBody UpdateClientDto updateClientDto) {
-        return clientFacade.addClient(updateClientDto);
+        return clientFrontFacade.addClient(updateClientDto);
     }
 
     @PutMapping("/{id}")
     public ClientDto updateClient(@PathVariable Long id, @Valid @RequestBody UpdateClientDto clientDto) {
-        return clientFacade.updateClient(id, clientDto);
+        return clientFrontFacade.updateClient(id, clientDto);
     }
 
     @DeleteMapping("/{id}")
     public void deleteClient(@PathVariable Long id) {
-        clientFacade.delete(id);
+        clientFrontFacade.delete(id);
     }
 }
