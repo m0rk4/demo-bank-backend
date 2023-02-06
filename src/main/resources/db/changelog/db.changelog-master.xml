@@ -6,4 +6,5 @@
          https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
     <include file="migrations/db.changelog-1-initialization.xml" relativeToChangelogFile="true"/>
+    <include file="migrations/db.changelog-2-deposit.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

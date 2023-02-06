@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet id="2023-02-06-13-50-00" author="MarkPutyato">
+        <sql dbms="postgresql">
+            DROP TABLE IF EXISTS currency_type CASCADE
+            ;
+
+            DROP TABLE IF EXISTS deposit_type CASCADE
+            ;
+
+            DROP TABLE IF EXISTS deposit_type_currency_type CASCADE
+            ;
+
+            CREATE TABLE currency_type
+            (
+                id   bigserial    NOT NULL,
+                name varchar(255) NOT NULL
+            )
+            ;
+
+            CREATE TABLE deposit_type
+            (
+                id          bigserial    NOT NULL,
+                name        varchar(255) NOT NULL,
+                description varchar(255) NOT NULL
+            )
+            ;
+
+            CREATE TABLE deposit_type_currency_type
+            (
+                id                 bigserial      NOT NULL,
+                deposit_type_id    bigint         NOT NULL,
+                currency_type_id   bigint         NOT NULL,
+                percent            numeric(10, 2) NOT NULL,
+                has_capitalization boolean        NOT NULL DEFAULT FALSE,
+                period_in_days     integer        NOT NULL,
+                min_deposit_size   bigint         NOT NULL,
+                is_revocable       boolean        NOT NULL DEFAULT FALSE
+            )
+            ;
+
+            ALTER TABLE currency_type
+                ADD CONSTRAINT PK_currency_type
+                    PRIMARY KEY (id)
+            ;
+
+            ALTER TABLE currency_type
+                ADD CONSTRAINT UNQ_currency_type_name UNIQUE (name)
+            ;
+
+            ALTER TABLE deposit_type
+                ADD CONSTRAINT PK_deposit_type
+                    PRIMARY KEY (id)
+            ;
+
+            ALTER TABLE deposit_type
+                ADD CONSTRAINT UNQ_deposit_type_name UNIQUE (name)
+            ;
+
+            ALTER TABLE deposit_type_currency_type
+                ADD CONSTRAINT PK_deposit_type_currency_type
+                    PRIMARY KEY (id)
+            ;
+
+            ALTER TABLE deposit_type_currency_type
+                ADD CONSTRAINT UNQ_deposit_type_currency_type_deposit_type_currency_type UNIQUE (deposit_type_id, currency_type_id)
+            ;
+
+            CREATE INDEX IXFK_deposit_type_currency_type_currency_type ON deposit_type_currency_type (currency_type_id ASC)
+            ;
+
+            CREATE INDEX IXFK_deposit_type_currency_type_deposit_type ON deposit_type_currency_type (deposit_type_id ASC)
+            ;
+
+            ALTER TABLE deposit_type_currency_type
+                ADD CONSTRAINT FK_deposit_type_currency_type_currency_type
+                    FOREIGN KEY (currency_type_id) REFERENCES currency_type (id) ON DELETE Restrict ON UPDATE Cascade
+            ;
+
+            ALTER TABLE deposit_type_currency_type
+                ADD CONSTRAINT FK_deposit_type_currency_type_deposit_type
+                    FOREIGN KEY (deposit_type_id) REFERENCES deposit_type (id) ON DELETE Restrict ON UPDATE Cascade
+            ;
+        </sql>
+    </changeSet>
+
+    <changeSet id="2023-02-06-14-50-00" author="MarkPutyato">
+        <sql dbms="postgresql">
+          ALTER TABLE deposit_type ALTER COLUMN description TYPE text;
+        </sql>
+    </changeSet>
+
+    <changeSet id="2023-02-06-16-50-00" author="MarkPutyato">
+        <sql dbms="postgresql">
+            DROP TABLE IF EXISTS account CASCADE
+            ;
+
+            DROP TABLE IF EXISTS deposit_agreement CASCADE
+            ;
+
+            CREATE TABLE account
+            (
+                id bigserial NOT NULL,
+                number varchar(255) NOT NULL,
+                code varchar(255) NOT NULL,
+                activity varchar(255) NOT NULL,
+                debit numeric(10,7) NOT NULL,
+                credit numeric(10,7) NOT NULL,
+                name varchar(255) NOT NULL,
+                currency_type_id bigint NOT NULL
+            )
+            ;
+
+            CREATE TABLE deposit_agreement
+            (
+                id bigserial NOT NULL,
+                number varchar(255) NOT NULL,
+                start_date date NOT NULL,
+                end_date date NOT NULL,
+                deposit_balance numeric(10,7) NOT NULL,
+                client_id bigint NOT NULL,
+                deposit_type_currency_type_id bigint NOT NULL,
+                account_current_id bigint NOT NULL,
+                account_percent_id bigint NOT NULL
+            )
+            ;
+
+            ALTER TABLE account ADD CONSTRAINT PK_account
+                PRIMARY KEY (id)
+            ;
+
+            ALTER TABLE account
+                ADD CONSTRAINT UNQ_account_number UNIQUE (number)
+            ;
+
+            CREATE INDEX IXFK_account_currency_type ON account (currency_type_id ASC)
+            ;
+
+            ALTER TABLE deposit_agreement ADD CONSTRAINT PK_deposit
+                PRIMARY KEY (id)
+            ;
+
+            CREATE INDEX IXFK_deposit_agreement_account ON deposit_agreement (account_current_id ASC)
+            ;
+
+            CREATE INDEX IXFK_deposit_agreement_account_02 ON deposit_agreement (account_percent_id ASC)
+            ;
+
+            CREATE INDEX IXFK_deposit_agreement_client ON deposit_agreement (client_id ASC)
+            ;
+
+            CREATE INDEX IXFK_deposit_agreement_deposit_type_currency_type ON deposit_agreement (deposit_type_currency_type_id ASC)
+            ;
+
+            ALTER TABLE account ADD CONSTRAINT FK_account_currency_type
+                FOREIGN KEY (currency_type_id) REFERENCES currency_type (id) ON DELETE Restrict ON UPDATE Cascade
+            ;
+
+            ALTER TABLE deposit_agreement ADD CONSTRAINT FK_deposit_agreement_account
+                FOREIGN KEY (account_current_id) REFERENCES account (id) ON DELETE Restrict ON UPDATE Cascade
+            ;
+
+            ALTER TABLE deposit_agreement ADD CONSTRAINT FK_deposit_agreement_account_02
+                FOREIGN KEY (account_percent_id) REFERENCES account (id) ON DELETE Restrict ON UPDATE Cascade
+            ;
+
+            ALTER TABLE deposit_agreement ADD CONSTRAINT FK_deposit_agreement_client
+                FOREIGN KEY (client_id) REFERENCES client (passport_id) ON DELETE Restrict ON UPDATE Cascade
+            ;
+
+            ALTER TABLE deposit_agreement ADD CONSTRAINT FK_deposit_agreement_deposit_type_currency_type
+                FOREIGN KEY (deposit_type_currency_type_id) REFERENCES deposit_type_currency_type (id) ON DELETE Restrict ON UPDATE Cascade
+            ;
+        </sql>
+    </changeSet>
+</databaseChangeLog>
