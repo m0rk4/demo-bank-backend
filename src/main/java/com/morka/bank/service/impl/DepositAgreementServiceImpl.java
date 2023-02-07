@@ -15,12 +15,16 @@ import com.morka.bank.service.ClientService;
 import com.morka.bank.service.DepositAgreementService;
 import com.morka.bank.service.DepositCurrencyService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class DepositAgreementServiceImpl implements DepositAgreementService {
@@ -30,6 +34,7 @@ public class DepositAgreementServiceImpl implements DepositAgreementService {
     private final ClientService clientService;
 
     private final DepositCurrencyService depositCurrencyService;
+
     private final AccountRepository accountRepository;
 
     @Override
@@ -54,6 +59,34 @@ public class DepositAgreementServiceImpl implements DepositAgreementService {
         agreement.setCurrentAccount(currentAccount);
         agreement.setPercentAccount(percentAccount);
         repository.save(agreement);
+    }
+
+    @Override
+    @Transactional
+    public void finishAtDay(LocalDate date) {
+        var cash = DataAccessUtils.singleResult(accountRepository.findByCode(AccountCode.BANK_CASH));
+        var bank = DataAccessUtils.singleResult(accountRepository.findByCode(AccountCode.BANK_DEVELOPMENT_FUND));
+        var agreements = repository.findAll();
+        for (var agreement : agreements) {
+            finishAgreement(date, agreement, cash, bank);
+        }
+    }
+
+    private void finishAgreement(LocalDate date, DepositAgreement agreement, Account cash, Account bank) {
+        if (date.isBefore(agreement.getStartDate())) {
+            log.info("Date={} is before agreement={} start date={}.", date, agreement.getId(), agreement.getStartDate());
+            return;
+        }
+        if (date.isAfter(agreement.getEndDate()) || date.isEqual(agreement.getEndDate())) {
+            log.info("Date={} covers agreement={} full period (end={}).", date, agreement.getId(), agreement.getEndDate());
+            return;
+        }
+        var totalMonths = agreement.getStartDate().until(date).toTotalMonths();
+        if (agreement.getDepositCurrency().isRevocable()) {
+            log.info("Date={} covers months={} for agreement={} period (start={}, end={}).", date, totalMonths, agreement.getId(), agreement.getStartDate(), agreement.getEndDate());
+            return;
+        }
+        log.info("Date={} not covers non-revocable agreement={} full period (start={}, end={}).", date, agreement.getId(), agreement.getEndDate(), agreement.getEndDate());
     }
 
     private void validateNumber(String number) {

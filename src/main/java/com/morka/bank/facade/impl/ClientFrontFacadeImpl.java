@@ -2,12 +2,11 @@ package com.morka.bank.facade.impl;
 
 import com.morka.bank.dto.ClientDto;
 import com.morka.bank.dto.UpdateClientDto;
-import com.morka.bank.mapper.Mapper;
 import com.morka.bank.facade.ClientFrontFacade;
+import com.morka.bank.mapper.Mapper;
 import com.morka.bank.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +23,7 @@ public class ClientFrontFacadeImpl implements ClientFrontFacade {
     @Override
     public Page<ClientDto> getClients(Pageable pageable) {
         var page = clientService.getClients(pageable);
-        var clients = page.get().map(client -> mapper.map(client, ClientDto.class)).toList();
-        return new PageImpl<>(clients, pageable, page.getTotalElements());
+        return page.map(client -> mapper.map(client, ClientDto.class));
     }
 
     @Transactional
