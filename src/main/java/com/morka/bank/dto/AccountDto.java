@@ -5,6 +5,8 @@ import com.morka.bank.model.AccountCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
+
 @Getter
 @Setter
 public class AccountDto {
@@ -24,4 +26,6 @@ public class AccountDto {
     private String name;
 
     private CurrencyTypeDto currencyType;
+
+    private Instant expiredTs;
 }

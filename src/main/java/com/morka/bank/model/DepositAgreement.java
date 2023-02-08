@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -33,6 +34,14 @@ public class DepositAgreement {
 
     @Column(nullable = false)
     private LocalDate endDate;
+
+    @Column(nullable = false)
+    private LocalDate updatedAt;
+
+    @Column(nullable = false)
+    private LocalDate lastPaymentDate;
+
+    private Instant expiredTs;
 
     @Column(nullable = false)
     private Long depositBalance;

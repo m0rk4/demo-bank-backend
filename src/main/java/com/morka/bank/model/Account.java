@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 
+import java.time.Instant;
 import java.util.Objects;
 
 @Entity
@@ -47,6 +48,8 @@ public class Account {
 
     @Column(nullable = false)
     private String name;
+
+    private Instant expiredTs;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "currency_type_id", nullable = false)
